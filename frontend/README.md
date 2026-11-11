@@ -1,16 +1,53 @@
-# React + Vite
+# MemberPass – AI-Powered Membership Management Platform (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+MemberPass is an intelligent, modern, and minimalist public-facing introduction landing page for an AI-powered membership management ecosystem.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Quick Start (Development Server)
 
-## React Compiler
+To start the Vite local development server:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+cd frontend
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+Open your browser at: **[http://localhost:5173/](http://localhost:5173/)**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+---
+
+## 🛠 Available Scripts
+
+* **`npm run dev`**: Starts the local Vite development server with Hot Module Replacement (HMR) at port `5173`.
+* **`npm run build`**: Compiles and bundles production-ready HTML, CSS, and JS into the `dist/` directory.
+* **`npm run preview`**: Locally previews the production build.
+
+---
+
+## 📂 Project Structure
+
+```
+frontend/
+├── index.html            # Main HTML5 landing page with semantic structure
+├── package.json          # Vite scripts & dependencies
+├── vite.config.js        # Vite configuration (port 5173, host enabled)
+├── public/
+│   ├── favicon.svg       # Branded MemberPass SVG icon
+│   └── icons.svg         # SVG icon assets
+└── src/
+    ├── style.css         # Minimalist obsidian & electric indigo stylesheet
+    └── script.js         # Interactive logic, AI query simulator & contact form validation
+```
+
+---
+
+## ✨ Features & Sections Included
+
+1. **Navigation Bar:** Logo, Home, About, Features, How It Works, Contact, and mobile drawer.
+2. **Hero Section:** "Welcome to MemberPass", 3D holographic digital pass card, live stats.
+3. **About Section:** Purpose, vision, and comparison against legacy membership systems.
+4. **Features Section:** Smart Tiers, AI Assistant, Member Directory, and Live Tracking with interactive preview console.
+5. **How It Works Section:** 4-step streamlined onboarding and tracking workflow.
+6. **Contact Section:** Direct contact info and interactive contact form with instant validation.
+7. **Footer:** MemberPass branding, navigation links, and back-to-top button.
