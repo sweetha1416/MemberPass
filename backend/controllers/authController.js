@@ -1,20 +1,14 @@
-
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
-// Generate JWT token
 const generateToken = (user) => {
   return jwt.sign(
-    {
-      id: user._id,
-      role: user.role
-    },
+    { id: user._id, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
 };
 
-// REGISTER
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
@@ -23,6 +17,14 @@ const registerUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Name, email and password are required"
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid email address"
       });
     }
 
@@ -64,12 +66,19 @@ const registerUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        passCode: user.passCode,
         role: user.role
       }
     });
-
   } catch (error) {
     console.error("Registration error:", error.message);
+
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "Email or pass code already exists"
+      });
+    }
 
     return res.status(500).json({
       success: false,
@@ -78,7 +87,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-// LOGIN
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -127,10 +135,10 @@ const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        passCode: user.passCode,
         role: user.role
       }
     });
-
   } catch (error) {
     console.error("Login error:", error.message);
 
@@ -141,7 +149,15 @@ const loginUser = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully"
+  });
+};
+
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  logoutUser
 };
