@@ -6,6 +6,7 @@
 
 [Visit MemberPass](https://member-pass.vercel.app/)
 
+[Drive Link](https://drive.google.com/file/d/11nW79ZUdcOa7IDWZXaMWA7gHmg-vu8A4/view?usp=sharing)
 ## 📌 About the Project
 
 MemberPass is a web-based membership management project focused on making membership-related processes smarter and more convenient.
