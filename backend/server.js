@@ -20,6 +20,7 @@ const app = express();
 // Allowed frontend origins
 const allowedOrigins = [
   "https://member-pass.vercel.app",
+  "https://member-pass-7n36y4wbu-swethakumar837-1628s-projects.vercel.app",
   "http://localhost:5173",
   "http://127.0.0.1:5173"
 ];
