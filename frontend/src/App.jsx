@@ -38,10 +38,12 @@ export default function App() {
     setSelectedPlanToast(`Welcome back, ${user.name}! Access credentials authenticated.`)
   }
 
-  const handlePaymentSuccess = (data) => {
-    setCurrentView('dashboard')
-    setSelectedPlanToast(`Payment successful! Your ${data.plan} membership is now active.`)
-  }
+ const handlePaymentSuccess = (data) => {
+  setCurrentView('dashboard')
+  setSelectedPlanToast(
+    `Payment received for ${data.plan}! Your membership activation is pending confirmation.`
+  )
+}
 
   // Handle header blur on scroll
   useEffect(() => {

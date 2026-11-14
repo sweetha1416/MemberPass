@@ -57,6 +57,17 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
+
+// Razorpay Webhook - Raw body must be available for signature verification
+const { handleRazorpayWebhook } = require("./controllers/webhookController");
+
+app.post(
+  "/api/payments/webhook",
+  express.raw({ type: "application/json" }),
+  handleRazorpayWebhook
+);
+
+// Normal request body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
