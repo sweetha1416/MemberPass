@@ -1,7 +1,5 @@
 
-
 const API_BASE = import.meta.env.VITE_API_URL || 'https://memberpass.onrender.com/api';
-
 
 export const setAuthToken = (token) => {
   if (token) {
@@ -167,6 +165,25 @@ export const memberApi = {
       console.error('memberApi.getAttendanceHistory error:', err);
       return { success: false, message: 'Unable to load attendance history', history: [] };
     }
+  },
+
+  // M3 Task 9: Member self-service membership pause
+  pauseMembership: async (days) => {
+    try {
+      const res = await fetch(`${API_BASE}/member/pause`, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ days })
+      });
+
+      return await res.json();
+    } catch (err) {
+      console.error('memberApi.pauseMembership error:', err);
+      return {
+        success: false,
+        message: 'Unable to submit membership pause request'
+      };
+    }
   }
 };
 
@@ -268,3 +285,95 @@ export const qrApi = {
   }
 };
 
+export const aiApi = {
+  chat: async (question) => {
+    try {
+      const res = await fetch(`${API_BASE}/ai/chat`, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({
+          question: (question || '').trim()
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return {
+          success: false,
+          message: data.message || 'AI request failed'
+        };
+      }
+
+      return data;
+    } catch (error) {
+      console.error('aiApi.chat error:', error);
+      return {
+        success: false,
+        message: 'Unable to connect to MemberPass AI'
+      };
+    }
+  }
+};
+
+// M3 Task 10: Membership expiry reminder
+export const reminderApi = {
+  runNow: async () => {
+    try {
+      const res = await fetch(`${API_BASE}/reminders/run-now`, {
+        method: 'POST',
+        headers: authHeaders()
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return {
+          success: false,
+          message: data.message || 'Unable to run expiry reminders'
+        };
+      }
+
+      return data;
+    } catch (error) {
+      console.error('reminderApi.runNow error:', error);
+
+      return {
+        success: false,
+        message: 'Unable to connect to reminder service'
+      };
+    }
+  }
+};
+
+
+// M3 Task 11: AI Absentee Drafts
+export const absenteeApi = {
+  getDrafts: async (days = 14) => {
+    try {
+      const res = await fetch(`${API_BASE}/absentees?days=${days}`, {
+        method: 'GET',
+        headers: authHeaders()
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return {
+          success: false,
+          message: data.message || 'Unable to fetch absentee drafts',
+          drafts: []
+        };
+      }
+
+      return data;
+    } catch (error) {
+      console.error('absenteeApi.getDrafts error:', error);
+      return {
+        success: false,
+        message: 'Unable to connect to absentee service',
+        drafts: []
+      };
+    }
+  }
+};

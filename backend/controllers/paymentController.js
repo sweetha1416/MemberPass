@@ -1,10 +1,10 @@
-
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 const Razorpay = require("razorpay");
 
 const Plan = require("../models/Plan");
 const Payment = require("../models/Payment");
+const Membership = require("../models/Membership");
 
 // Razorpay instance
 const getRazorpayInstance = () => {
@@ -182,11 +182,15 @@ const verifyPayment = async (req, res) => {
 
     // Webhook may have captured the payment before this request.
     if (payment.status === "captured") {
+      let activeMembership = null;
+      if (payment.membership) {
+        activeMembership = await Membership.findById(payment.membership).populate("plan", "name durationDays priceInPaise");
+      }
       return res.status(200).json({
         success: true,
         message: "Payment already captured and membership activation completed",
         status: "captured",
-        membership: null
+        membership: activeMembership
       });
     }
 
@@ -270,11 +274,15 @@ const verifyPayment = async (req, res) => {
       if (
         latestPayment?.status === "captured"
       ) {
+        let activeMembership = null;
+        if (latestPayment.membership) {
+          activeMembership = await Membership.findById(latestPayment.membership).populate("plan", "name durationDays priceInPaise");
+        }
         return res.status(200).json({
           success: true,
           message: "Payment already captured and membership activation completed",
           status: "captured",
-          membership: null
+          membership: activeMembership
         });
       }
 

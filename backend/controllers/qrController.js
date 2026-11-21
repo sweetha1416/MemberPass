@@ -22,10 +22,27 @@ const getIndiaDayRange = (date = new Date()) => {
   };
 };
 
+// Extract pass code whether provided as raw code or JSON payload string
+const extractPassCode = (raw) => {
+  if (!raw || typeof raw !== "string") return "";
+  const trimmed = raw.trim();
+  if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      return (parsed.pass_code || parsed.passCode || parsed.code || trimmed).trim();
+    } catch {
+      return trimmed;
+    }
+  }
+  return trimmed;
+};
+
 // Find member and latest membership
 const findMemberMembership = async (passCode) => {
+  const cleanPassCode = extractPassCode(passCode);
+
   const member = await User.findOne({
-    passCode: passCode.trim()
+    passCode: cleanPassCode
   }).select("_id name passCode");
 
   if (!member) {
@@ -56,7 +73,7 @@ const findMemberMembership = async (passCode) => {
 };
 
 // Validate membership status and class limit
-const validateMembership = (membership) => {
+const validateMembership = (membership, checkClassLimit = true) => {
   if (membership.status === "paused") {
     return {
       error: "Plan paused",
@@ -81,6 +98,7 @@ const validateMembership = (membership) => {
   const classLimit = membership.plan?.classLimit;
 
   if (
+    checkClassLimit &&
     classLimit !== null &&
     classLimit !== undefined &&
     membership.classesUsed >= classLimit
@@ -232,7 +250,7 @@ const validateQRPass = async (req, res) => {
       });
     }
 
-    const result = await findValidMembership(passCode);
+    const result = await findMemberMembership(passCode);
 
     if (result.error) {
       return res.status(result.status).json({
@@ -253,10 +271,68 @@ const validateQRPass = async (req, res) => {
 
     const { member, membership } = result;
 
+    const statusError = validateMembership(membership, false);
+    if (statusError) {
+      return res.status(statusError.status).json({
+        success: false,
+        entryStatus: "ENTRY_DENIED",
+        reason: statusError.error,
+        member: {
+          name: member.name,
+          plan: membership.plan?.name || "Member",
+          endDate: membership.endDate,
+          classesUsed: membership.classesUsed,
+          classLimit: membership.plan?.classLimit ?? null
+        }
+      });
+    }
+
+    const { start, end } = getIndiaDayRange();
+
+    const todayAttendance = await Attendance.findOne({
+      member: member._id,
+      membership: membership._id,
+      checkedInAt: { $gte: start, $lt: end }
+    }).sort({ checkedInAt: -1 });
+
+    if (todayAttendance) {
+      return res.status(200).json({
+        success: true,
+        entryStatus: "ENTRY_ALLOWED",
+        alreadyCheckedIn: true,
+        reason: "Already checked in today",
+        member: {
+          name: member.name,
+          plan: membership.plan?.name || "Member",
+          endDate: membership.endDate,
+          classesUsed: membership.classesUsed,
+          classLimit: membership.plan?.classLimit ?? null
+        }
+      });
+    }
+
+    const validationError = validateMembership(membership);
+
+    if (validationError) {
+      return res.status(validationError.status).json({
+        success: false,
+        entryStatus: "ENTRY_DENIED",
+        reason: validationError.error,
+        member: {
+          name: member.name,
+          plan: membership.plan?.name || "Member",
+          endDate: membership.endDate,
+          classesUsed: membership.classesUsed,
+          classLimit: membership.plan?.classLimit ?? null
+        }
+      });
+    }
+
     return res.status(200).json({
       success: true,
       entryStatus: "ENTRY_ALLOWED",
       reason: "Valid active membership",
+      alreadyCheckedIn: false,
       member: {
         name: member.name,
         plan: membership.plan?.name || "Member",
@@ -353,6 +429,22 @@ const checkInQRPass = async (req, res) => {
 
     const { member, membership } = lookup;
 
+    const statusError = validateMembership(membership, false);
+    if (statusError) {
+      return res.status(statusError.status).json({
+        success: false,
+        entryStatus: "ENTRY_DENIED",
+        reason: statusError.error,
+        member: {
+          name: member.name,
+          plan: membership.plan?.name || "Member",
+          endDate: membership.endDate,
+          classesUsed: membership.classesUsed,
+          classLimit: membership.plan?.classLimit ?? null
+        }
+      });
+    }
+
     // Same member + same India calendar day = green, no extra class
     const { start, end } = getIndiaDayRange();
 
@@ -373,7 +465,10 @@ const checkInQRPass = async (req, res) => {
         message: "Member already checked in today. No extra class counted.",
         member: {
           name: member.name,
-          plan: membership.plan?.name || "Member"
+          plan: membership.plan?.name || "Member",
+          endDate: membership.endDate,
+          classesUsed: membership.classesUsed,
+          classLimit: membership.plan?.classLimit ?? null
         },
         attendance: {
           id: todayAttendance._id,
@@ -455,7 +550,10 @@ const checkInQRPass = async (req, res) => {
       message: "Class check-in successful",
       member: {
         name: member.name,
-        plan: membership.plan?.name || "Member"
+        plan: membership.plan?.name || "Member",
+        endDate: updatedMembership.endDate,
+        classesUsed: updatedMembership.classesUsed,
+        classLimit: classLimit ?? null
       },
       attendance: {
         id: attendance._id,

@@ -14,7 +14,10 @@ if (!process.env.MONGO_URI) {
 }
 
 const connectDB = require("./config/db");
-
+const startMembershipPauseJob = require("./jobs/membershipPauseJob");
+const {
+  startMembershipExpiryJob
+} = require("./jobs/membershipExpiryJob");
 const app = express();
 
 // Allowed frontend origins
@@ -23,6 +26,8 @@ const allowedOrigins = [
   "https://member-pass-7n36y4wbu-swethakumar837-1628s-projects.vercel.app",
   "https://member-pass-6k25f0z49-swethakumar837-1628s-projects.vercel.app",
   "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
   "http://127.0.0.1:5173"
 ];
 
@@ -65,7 +70,7 @@ const { handleRazorpayWebhook } = require("./controllers/webhookController");
 
 app.post(
   "/api/payments/webhook",
-  express.raw({ type: "application/json" }),
+  express.raw({ type: "*/*" }),
   handleRazorpayWebhook
 );
 
@@ -80,6 +85,8 @@ app.use("/api/payments", require("./routes/paymentRoutes"));
 app.use("/api/member", require("./routes/memberRoutes"));
 app.use("/api/qr", require("./routes/qrRoutes"));
 app.use("/api/ai", require("./routes/aiRoutes"));
+app.use("/api/absentees", require("./routes/absenteeRoutes"));
+app.use("/api/reminders", require("./routes/reminderRoutes"));
 
 // Home Route
 app.get("/", (req, res) => {
@@ -127,6 +134,8 @@ const startServer = async () => {
   try {
     await connectDB();
 
+startMembershipPauseJob();
+startMembershipExpiryJob();
     const PORT = process.env.PORT || 5000;
 
     app.listen(PORT, () => {
@@ -143,3 +152,5 @@ const startServer = async () => {
 };
 
 startServer();
+
+

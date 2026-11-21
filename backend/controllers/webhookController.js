@@ -78,6 +78,25 @@ const handleRazorpayWebhook = async (req, res) => {
         { session }
       );
 
+      // Handle payment.failed: mark status as failed, never activate membership
+      if (payload.event === "payment.failed") {
+        const failedPayment = payload.payload?.payment?.entity;
+        if (failedPayment?.order_id) {
+          const payment = await Payment.findOne({
+            razorpayOrderId: failedPayment.order_id
+          }).session(session);
+
+          if (payment && payment.status !== "captured") {
+            payment.status = "failed";
+            if (failedPayment.id) {
+              payment.razorpayPaymentId = failedPayment.id;
+            }
+            await payment.save({ session });
+          }
+        }
+        return;
+      }
+
       // Only payment.captured can activate a membership.
       if (payload.event !== "payment.captured") {
         return;
@@ -191,10 +210,11 @@ const handleRazorpayWebhook = async (req, res) => {
 
   } catch (error) {
     // Only duplicate webhook event IDs should be acknowledged as duplicates.
-    if (
-      error.code === 11000 &&
-      error.keyPattern?.eventId
-    ) {
+    const isDuplicateEvent =
+      (error.code === 11000 || error.message?.includes("E11000")) &&
+      (error.keyPattern?.eventId || error.keyValue?.eventId || error.message?.includes("eventId"));
+
+    if (isDuplicateEvent) {
       return res.status(200).json({
         success: true,
         message: "Duplicate webhook ignored"
