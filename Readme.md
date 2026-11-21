@@ -8,7 +8,7 @@
 
 [Drive Link](https://drive.google.com/file/d/11nW79ZUdcOa7IDWZXaMWA7gHmg-vu8A4/view?usp=sharing)
 
-[AI ASSiSTANT](https://drive.google.com/file/d/1fE0dK_WYZGUPuKz4V554H17JqjZujUlv/view?usp=sharing)
+[AI ASSISTANT](https://drive.google.com/file/d/1fE0dK_WYZGUPuKz4V554H17JqjZujUlv/view?usp=sharing)
 ## 📌 About the Project
 
 MemberPass is a web-based membership management project focused on making membership-related processes smarter and more convenient.
