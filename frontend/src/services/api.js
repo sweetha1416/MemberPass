@@ -52,11 +52,11 @@ export const authApi = {
         typeof userDataOrName === 'object' && userDataOrName !== null
           ? userDataOrName
           : {
-              name: userDataOrName,
-              email: maybeEmail,
-              password: maybePassword,
-              phone: maybePhone
-            };
+            name: userDataOrName,
+            email: maybeEmail,
+            password: maybePassword,
+            phone: maybePhone
+          };
 
       const res = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
