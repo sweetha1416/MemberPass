@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { aiApi } from '../services/api';
+import './AIAssistantPage.css';
 
 export default function AIAssistantPage({
   currentUser,
