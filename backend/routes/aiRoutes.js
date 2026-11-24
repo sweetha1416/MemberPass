@@ -97,13 +97,12 @@ router.post("/chat", optionalAuth, async (req, res) => {
 • **Valid Until:** ${endDateStr}
 • **Digital QR Pass:** ${statusUpper === "ACTIVE" ? "Ready for check-in" : statusUpper}
 
-${
-  membership.status === "paused"
-    ? "Your pass is currently paused. You can resume it anytime directly from your dashboard."
-    : membership.status === "ended"
-    ? "Your previous membership has ended. You can renew your pass from the Membership Plans section."
-    : "Your pass is active and in good standing. Present your digital QR pass at the studio front desk for instant entry."
-}`
+${membership.status === "paused"
+            ? `Your pass is currently paused until ${new Date(membership.pauseEndDate).toLocaleDateString("en-IN")}. Your membership expiry has been extended accordingly.`
+            : membership.status === "ended"
+              ? "Your previous membership has ended. You can renew your pass from the Membership Plans section."
+              : "Your pass is active and in good standing. Present your digital QR pass at the studio front desk for instant entry."
+          }`
       });
     }
 
@@ -148,7 +147,7 @@ ${
       const used = membership.classesUsed || 0;
       const limit = membership.plan?.classLimit;
       const remaining =
-        limit !== null && limit !== undefined
+        limit !== null && limit !== undefined && Number(limit) > 0
           ? Math.max(0, limit - used)
           : "Unlimited";
 
@@ -207,9 +206,8 @@ Your attendance is securely logged whenever authorized staff scans your encrypte
       return res.json({
         success: true,
         question: cleanQuestion,
-        answer: `Hello **${req.user.name}**! Your **${
-          membership.plan?.name || "MemberPass"
-        }** membership expiration details:
+        answer: `Hello **${req.user.name}**! Your **${membership.plan?.name || "MemberPass"
+          }** membership expiration details:
 
 • **Expiry Date:** ${endDateStr}
 • **Days Remaining:** ${daysRemaining} day${daysRemaining === 1 ? "" : "s"}
@@ -230,19 +228,23 @@ We will send renewal notifications to your registered email before expiry so you
     ) {
       let plans = [];
       try {
-        plans = await Plan.find({ isActive: true }).sort({ price: 1 });
+        plans = await Plan.find({ isActive: true }).sort({ priceInPaise: 1 });
       } catch (e) {
         // Fallback plans if db query fails
       }
 
       if (plans.length > 0) {
         const planList = plans
-          .map(
-            (p, idx) =>
-              `${idx + 1}. **${p.name} Plan** — ₹${(p.price || 0).toLocaleString("en-IN")} for ${p.durationDays} Days\n   • Classes: ${
-                p.classLimit ? `${p.classLimit} classes` : "Unlimited sessions"
-              }\n   • ${p.description || "Full access with encrypted digital QR pass"}`
-          )
+          .map((p, idx) => {
+            const priceInRupees = p.priceInPaise
+              ? p.priceInPaise / 100
+              : p.price || 0;
+            const classLimitStr =
+              p.classLimit && Number(p.classLimit) > 0
+                ? `${p.classLimit} studio classes`
+                : "Unlimited sessions";
+            return `${idx + 1}. **${p.name} Plan** — ₹${priceInRupees.toLocaleString("en-IN")} for ${p.durationDays} Days\n   • Classes: ${classLimitStr}\n   • ${p.description || "Full studio access with encrypted digital QR pass"}`;
+          })
           .join("\n\n");
 
         return res.json({
@@ -261,7 +263,7 @@ All memberships include instant digital QR passes, real-time class tracking, and
         question: cleanQuestion,
         answer: `MemberPass offers three tailored yoga & wellness membership plans:
 
-1. **Basic Plan (₹1,500 / 30 Days)**: 10 studio yoga classes, encrypted digital QR pass, attendance tracking.
+1. **Basic Plan (₹1,500 / 30 Days)**: 8 studio yoga classes, encrypted digital QR pass, attendance tracking.
 2. **Standard Plan (₹3,000 / 30 Days)**: 25 studio yoga classes, priority booking, flexible scheduling.
 3. **Premium Plan (₹7,500 / 90 Days)**: Unlimited studio sessions & masterclasses, VIP wellness consultations, 90-day extended validity.
 
@@ -274,7 +276,8 @@ You can select and activate any plan with secure Razorpay test checkout under th
       qLower.includes("pause") ||
       qLower.includes("freeze") ||
       qLower.includes("hold") ||
-      qLower.includes("suspend")
+      qLower.includes("suspend") ||
+      qLower.includes("break")
     ) {
       return res.json({
         success: true,
@@ -282,11 +285,98 @@ You can select and activate any plan with secure Razorpay test checkout under th
         answer: `You can pause your active membership anytime directly from the **Member Dashboard**:
 
 1. Log in and navigate to your **Member Dashboard**.
-2. Locate the **Membership Status** card on your dashboard.
-3. Click the **Pause Membership** button.
-4. While paused, your expiration countdown stops and class usage is temporarily suspended until you choose to resume.
+2. Scroll to the **Membership Pause** section.
+3. Select your desired pause duration between **1 and 15 days**.
+4. Confirm your pause request.
 
-*Members can pause an active pass once per billing cycle at no extra charge.*`
+**Important Policy Details:**
+• **Frequency:** Members may pause an active pass **once per calendar year**.
+• **Duration Limits:** Select any duration from **1 to 15 days**.
+• **Automatic Validity Extension:** Your membership expiration date is automatically extended by the exact number of paused days.
+• **Access Suspension:** Studio check-in is temporarily suspended while paused and resumes automatically on your scheduled resume date.`
+      });
+    }
+
+    // 6. Attendance Privacy & Data Protection
+    if (
+      qLower.includes("privacy") ||
+      qLower.includes("confidential") ||
+      qLower.includes("who is attending") ||
+      qLower.includes("other member") ||
+      qLower.includes("member list") ||
+      qLower.includes("who attended") ||
+      (qLower.includes("attendance") && (qLower.includes("private") || qLower.includes("protect") || qLower.includes("safe") || qLower.includes("policy")))
+    ) {
+      return res.json({
+        success: true,
+        question: cleanQuestion,
+        answer: `MemberPass protects member privacy through strict access controls and authentication boundaries:
+
+• **Confidential Logs:** Individual class check-in records are strictly confidential and accessible exclusively to the authenticated account holder and authorized studio staff.
+• **No Cross-Member Exposure:** Members cannot view, search, or access other practitioners' attendance history, check-in timestamps, or contact details.
+• **Pass Key Verification:** Studio check-ins utilize a unique 256-bit cryptographic pass code to authenticate memberships without exposing personal credentials.`
+      });
+    }
+
+    // 7. Renewals & Membership Extension
+    if (
+      qLower.includes("renew") ||
+      qLower.includes("extend") ||
+      qLower.includes("re-activate") ||
+      qLower.includes("continue membership")
+    ) {
+      return res.json({
+        success: true,
+        question: cleanQuestion,
+        answer: `You can renew or upgrade your yoga pass at any time:
+
+1. Navigate to the **Membership Plans** section on the website or click **Upgrade / Renew Plan** on your Member Dashboard.
+2. Select your desired plan: Basic (₹1,500 / 8 classes), Standard (₹3,000 / 25 classes), or Premium (₹7,500 / Unlimited).
+3. Complete the checkout through Razorpay test mode.
+4. Once payment is confirmed and captured via Razorpay, your renewed membership privileges, validity period, and QR pass are activated automatically.`
+      });
+    }
+
+    // 8. Payment & Invoicing Queries
+    if (
+      qLower.includes("payment") ||
+      qLower.includes("receipt") ||
+      qLower.includes("invoice") ||
+      qLower.includes("refund") ||
+      qLower.includes("razorpay") ||
+      qLower.includes("billing")
+    ) {
+      return res.json({
+        success: true,
+        question: cleanQuestion,
+        answer: `MemberPass manages payments through secure Razorpay integration:
+
+• **Payment Records:** You can review all recent transactions, order IDs, and payment references directly in your **Member Dashboard** under Recent Transactions.
+• **Security:** All transactions use encrypted tokens with real-time signature verification.
+• **Refund Policy:** If you encounter billing issues or need assistance with a transaction, please speak with the front desk or submit an inquiry via our contact form.`
+      });
+    }
+
+    // 9. Support & Studio Hours
+    if (
+      qLower.includes("support") ||
+      qLower.includes("contact") ||
+      qLower.includes("phone") ||
+      qLower.includes("email") ||
+      qLower.includes("hours") ||
+      qLower.includes("front desk") ||
+      qLower.includes("timing") ||
+      qLower.includes("helpdesk")
+    ) {
+      return res.json({
+        success: true,
+        question: cleanQuestion,
+        answer: `Our dedicated wellness concierge and front-desk team are here to assist you:
+
+• **Studio Hours:** Monday – Sunday: 06:00 – 21:00 IST (front-desk studio access)
+• **Contact Desk:** Visit the front desk at our yoga sanctuary or submit the Contact form on our home page.
+• **Support Inquiries:** Inquiries can be submitted via the contact form on our website or directly with attending studio staff.
+• **Immediate Assistance:** Speak directly with attending studio staff during operating hours.`
       });
     }
 

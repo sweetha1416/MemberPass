@@ -73,7 +73,10 @@ const getMemberProfile = async (req, res) => {
               pauseEndDate: membership.pauseEndDate,
               pauseHistory: membership.pauseHistory || [],
               classesRemaining:
-                membership.plan && membership.plan.classLimit !== null
+                membership.plan &&
+                membership.plan.classLimit !== null &&
+                membership.plan.classLimit !== undefined &&
+                Number(membership.plan.classLimit) > 0
                   ? Math.max(
                       0,
                       membership.plan.classLimit - membership.classesUsed

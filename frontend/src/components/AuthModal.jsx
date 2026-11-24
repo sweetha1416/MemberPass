@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { authApi, setAuthToken, setStoredUser } from '../services/api';
 
 export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' }) {
@@ -12,6 +12,14 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setError('');
+      setSuccessMsg('');
+    }
+  }, [isOpen, initialMode]);
 
   if (!isOpen) return null;
 
@@ -82,6 +90,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
       phone: ''
     });
     setError('');
+    setSuccessMsg('');
   };
 
   return (
@@ -118,6 +127,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
               onClick={() => {
                 setMode('login');
                 setError('');
+                setSuccessMsg('');
               }}
             >
               Sign In
@@ -128,6 +138,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
               onClick={() => {
                 setMode('signup');
                 setError('');
+                setSuccessMsg('');
               }}
             >
               Create Account

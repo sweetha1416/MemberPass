@@ -101,6 +101,7 @@ const validateMembership = (membership, checkClassLimit = true) => {
     checkClassLimit &&
     classLimit !== null &&
     classLimit !== undefined &&
+    Number(classLimit) > 0 &&
     membership.classesUsed >= classLimit
   ) {
     return {
@@ -507,7 +508,7 @@ const checkInQRPass = async (req, res) => {
       classesUsed: membership.classesUsed
     };
 
-    if (classLimit !== null && classLimit !== undefined) {
+    if (classLimit !== null && classLimit !== undefined && Number(classLimit) > 0) {
       filter.classesUsed = {
         $eq: membership.classesUsed,
         $lt: classLimit
@@ -577,7 +578,7 @@ const checkInQRPass = async (req, res) => {
     }
 
     if (error.code === 11000) {
-      const duplicate = await Attendance.findOne({
+      let duplicate = await Attendance.findOne({
         checkInId: req.body.checkInId
       })
         .populate("member", "name")
@@ -588,6 +589,22 @@ const checkInQRPass = async (req, res) => {
             select: "name classLimit"
           }
         });
+
+      if (!duplicate && incrementedMembershipId) {
+        const { start, end } = getIndiaDayRange();
+        duplicate = await Attendance.findOne({
+          membership: incrementedMembershipId,
+          checkedInAt: { $gte: start, $lt: end }
+        })
+          .populate("member", "name")
+          .populate({
+            path: "membership",
+            populate: {
+              path: "plan",
+              select: "name classLimit"
+            }
+          });
+      }
 
       if (duplicate) {
         return res.status(200).json({

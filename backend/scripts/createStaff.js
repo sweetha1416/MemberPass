@@ -8,22 +8,32 @@ async function createStaff() {
   try {
     await connectDB();
 
+    const staffEmail = process.env.STAFF_EMAIL || process.argv[2] || "m2.staff@example.com";
+    let staffPassword = process.env.STAFF_PASSWORD || process.argv[3];
+
+    if (!staffPassword) {
+      if (process.env.NODE_ENV === "production") {
+        throw new Error("STAFF_PASSWORD environment variable is required in production");
+      }
+      staffPassword = "MemberPass@123";
+    }
+
     let staff = await User.findOne({
-      email: "m2.staff@example.com"
+      email: staffEmail
     });
 
     if (!staff) {
       staff = new User({
         name: "MemberPass Staff",
-        email: "m2.staff@example.com",
-        password: "MemberPass@123",
+        email: staffEmail,
+        password: staffPassword,
         phone: "9876500099",
         role: "staff",
         isActive: true
       });
     } else {
       staff.name = "MemberPass Staff";
-      staff.password = "MemberPass@123";
+      staff.password = staffPassword;
       staff.role = "staff";
       staff.isActive = true;
     }

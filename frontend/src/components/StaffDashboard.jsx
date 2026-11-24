@@ -515,7 +515,7 @@ export default function StaffDashboard({ currentUser, onLogout, onNavigateAI }) 
               <h3>{member.name}</h3>
               <p>Plan: {member.plan}</p>
               <p>
-                Classes used: {member.classesUsed} / {member.classLimit ?? 'Unlimited'}
+                Classes used: {member.classesUsed} / {member.classLimit && Number(member.classLimit) > 0 ? member.classLimit : 'Unlimited'}
               </p>
               <p>
                 Membership ends: {member.endDate
@@ -640,6 +640,9 @@ export default function StaffDashboard({ currentUser, onLogout, onNavigateAI }) 
                     {draft.inactiveDays === null
                       ? 'Never attended'
                       : `${draft.inactiveDays} days inactive`}
+                  </span>
+                  <span className="attendance-tag-pill" style={{ background: 'rgba(212, 175, 55, 0.15)', color: 'var(--gold-accent, #c9933e)', border: '1px solid rgba(212, 175, 55, 0.3)' }}>
+                    {draft.source === 'ai' ? '✦ AI Generated' : '📋 Smart Template Draft'}
                   </span>
                 </div>
                 <p style={{ marginTop: '10px' }}>

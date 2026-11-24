@@ -79,6 +79,8 @@ const getAbsenteeDrafts = async (req, res) => {
         lastAttendance: lastVisit,
         inactiveDays,
         message,
+        source: "template",
+        draftType: "Smart Template Draft",
         status: "draft"
       });
     }

@@ -7,11 +7,11 @@ const DEFAULT_PLANS = [
     price: 1500,
     priceInPaise: 150000,
     durationDays: 30,
-    classLimit: 10,
+    classLimit: 8,
     description: 'Access to regular yoga sessions, class participation tracking, and digital check-ins.',
     features: [
       'Access to regular yoga sessions',
-      'Up to 10 classes',
+      'Up to 8 classes',
       'Digital QR Membership Pass',
       'Attendance history'
     ]
@@ -54,7 +54,7 @@ const YOGA_PLAN_EXTRAS = {
     description: 'Access to regular yoga sessions, class participation tracking, and digital check-ins.',
     features: [
       'Access to regular yoga sessions',
-      'Up to 10 classes',
+      'Up to 8 classes',
       'Digital QR Membership Pass',
       'Attendance history'
     ]

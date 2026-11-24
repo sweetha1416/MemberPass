@@ -24,10 +24,12 @@ export default function MemberDashboard({
   const [pauseMessage, setPauseMessage] = useState('');
   const [pauseError, setPauseError] = useState('');
 
+  const currentUserId = currentUser?._id || currentUser?.id;
+
   useEffect(() => {
     loadDashboardData();
     loadAttendanceHistory();
-  }, []);
+  }, [currentUserId]);
 
   const loadDashboardData = async () => {
     try {
@@ -271,7 +273,8 @@ export default function MemberDashboard({
               {membership?.classesUsed || 0}
               <span className="metric-sub">
                 {membership?.plan?.classLimit !== null &&
-                membership?.plan?.classLimit !== undefined
+                membership?.plan?.classLimit !== undefined &&
+                Number(membership.plan.classLimit) > 0
                   ? ` / ${membership.plan.classLimit} Classes`
                   : ' / Unlimited'}
               </span>
