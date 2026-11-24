@@ -111,9 +111,11 @@ export const planApi = {
   getPlans: async () => {
     try {
       const res = await fetch(`${API_BASE}/plans`);
+      if (!res.ok) {
+        return { success: false, message: 'Plans endpoint unreachable', plans: [] };
+      }
       return await res.json();
-    } catch (err) {
-      console.error('planApi.getPlans error:', err);
+    } catch {
       return { success: false, message: 'Unable to fetch plans', plans: [] };
     }
   },

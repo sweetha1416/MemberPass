@@ -1,12 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import './App.css'
-import AuthModal from './components/AuthModal'
 import PlansSection from './components/PlansSection'
-import MemberDashboard from './components/MemberDashboard'
-import QRPassModal from './components/QRPassModal'
-import StaffDashboard from './components/StaffDashboard'
-import AIAssistantPage from './components/AIAssistantPage'
 import { getStoredUser, clearAuth, authApi, aiApi } from './services/api'
+
+// Lazy-loaded routes & modals to reduce initial bundle size & unused JavaScript
+const AuthModal = lazy(() => import('./components/AuthModal'))
+const MemberDashboard = lazy(() => import('./components/MemberDashboard'))
+const QRPassModal = lazy(() => import('./components/QRPassModal'))
+const StaffDashboard = lazy(() => import('./components/StaffDashboard'))
+const AIAssistantPage = lazy(() => import('./components/AIAssistantPage'))
+
+// Subtle fallback loader for lazy components
+const ViewLoader = () => (
+  <div className="dashboard-loading-state" role="status" aria-live="polite">
+    <div className="crest-spinner"></div>
+    <p>Loading MemberPass portal...</p>
+  </div>
+)
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(getStoredUser())
@@ -46,10 +56,18 @@ export default function App() {
   )
 }
 
-  // Handle header blur on scroll
+  // Handle header blur on scroll (throttled with requestAnimationFrame to prevent forced reflow)
   useEffect(() => {
+    let ticking = false
     const handleScroll = () => {
-      setScrolled(window.scrollY > 24)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const isScrolled = window.scrollY > 24
+          setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev))
+          ticking = false
+        })
+        ticking = true
+      }
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
@@ -311,56 +329,60 @@ export default function App() {
 
       {currentView === 'ai' ? (
         <main>
-          <AIAssistantPage
-            currentUser={currentUser}
-            onNavigateHome={() => {
-              setCurrentView('landing')
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-            onNavigateDashboard={() => {
-              if (currentUser) {
-                setCurrentView('dashboard')
-              } else {
-                setAuthModalMode('login')
+          <Suspense fallback={<ViewLoader />}>
+            <AIAssistantPage
+              currentUser={currentUser}
+              onNavigateHome={() => {
+                setCurrentView('landing')
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+              onNavigateDashboard={() => {
+                if (currentUser) {
+                  setCurrentView('dashboard')
+                } else {
+                  setAuthModalMode('login')
+                  setAuthModalOpen(true)
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+              onOpenAuthModal={(mode = 'login') => {
+                setAuthModalMode(mode)
                 setAuthModalOpen(true)
-              }
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-            onOpenAuthModal={(mode = 'login') => {
-              setAuthModalMode(mode)
-              setAuthModalOpen(true)
-            }}
-          />
+              }}
+            />
+          </Suspense>
         </main>
       ) : currentView === 'dashboard' && currentUser ? (
         <main>
-          {['staff', 'admin'].includes(currentUser.role) ? (
-            <StaffDashboard
-              currentUser={currentUser}
-              onLogout={handleLogout}
-              onNavigateAI={() => {
-                setCurrentView('ai')
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }}
-            />
-          ) : (
-            <MemberDashboard
-              currentUser={currentUser}
-              onLogout={handleLogout}
-              onNavigateToPlans={() => {
-                setCurrentView('landing')
-                setTimeout(() => {
-                  const el = document.getElementById('plans')
-                  el?.scrollIntoView({ behavior: 'smooth' })
-                }, 120)
-              }}
-              onOpenQRModal={() => setQrModalOpen(true)}
-              onNavigateAI={() => {
-                setCurrentView('ai')
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }}
-            />
-          )}
+          <Suspense fallback={<ViewLoader />}>
+            {['staff', 'admin'].includes(currentUser.role) ? (
+              <StaffDashboard
+                currentUser={currentUser}
+                onLogout={handleLogout}
+                onNavigateAI={() => {
+                  setCurrentView('ai')
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+              />
+            ) : (
+              <MemberDashboard
+                currentUser={currentUser}
+                onLogout={handleLogout}
+                onNavigateToPlans={() => {
+                  setCurrentView('landing')
+                  setTimeout(() => {
+                    const el = document.getElementById('plans')
+                    el?.scrollIntoView({ behavior: 'smooth' })
+                  }, 120)
+                }}
+                onOpenQRModal={() => setQrModalOpen(true)}
+                onNavigateAI={() => {
+                  setCurrentView('ai')
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+              />
+            )}
+          </Suspense>
         </main>
       ) : (
         <main>
@@ -452,7 +474,7 @@ export default function App() {
                         <span>ML</span>
                       </div>
                       <div className="member-meta">
-                        <h3 className="member-name">Maya Lin</h3>
+                        <div className="member-name">Maya Lin</div>
                         <p className="member-role">Practitioner Member</p>
                         <code className="pass-code">ID: YOGA-2026-8894X</code>
                       </div>
@@ -840,6 +862,7 @@ export default function App() {
                             value={aiQuery}
                             onChange={(e) => setAiQuery(e.target.value)}
                             placeholder="Ask MemberPass AI (e.g. renewals, attendance, yoga passes)..."
+                            aria-label="Ask MemberPass AI a question"
                           />
                           <button type="submit" className="chat-send-btn" aria-label="Submit inquiry">
                             <i className="fa-solid fa-paper-plane"></i>
@@ -1166,7 +1189,7 @@ export default function App() {
             </div>
 
             <div className="footer-col">
-              <h4 className="footer-col-title">Navigation</h4>
+              <h3 className="footer-col-title">Navigation</h3>
               <ul className="footer-col-links">
                 <li><a href="#home">Home Sanctuary</a></li>
                 <li><a href="#about">Studio Philosophy</a></li>
@@ -1190,7 +1213,7 @@ export default function App() {
             </div>
 
             <div className="footer-col">
-              <h4 className="footer-col-title">Membership Plans</h4>
+              <h3 className="footer-col-title">Membership Plans</h3>
               <ul className="footer-col-links">
                 <li><a href="#plans">Basic Pass (8 Classes)</a></li>
                 <li><a href="#plans">Standard Pass (25 Classes)</a></li>
@@ -1200,7 +1223,7 @@ export default function App() {
             </div>
 
             <div className="footer-col">
-              <h4 className="footer-col-title">Studio Standards</h4>
+              <h3 className="footer-col-title">Studio Standards</h3>
               <p className="footer-col-text">
                 Certified sub-second optical QR check-in. Real-time class capacity management and encrypted member data protection.
               </p>
@@ -1227,20 +1250,24 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Authentication Modal */}
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        onSuccess={handleAuthSuccess}
-        initialMode={authModalMode}
-      />
-
-      {/* Fullscreen Digital QR Pass Scanner Modal */}
-      <QRPassModal
-        isOpen={qrModalOpen}
-        onClose={() => setQrModalOpen(false)}
-        currentUser={currentUser}
-      />
+      {/* Lazy-loaded Modals wrapped in Suspense */}
+      <Suspense fallback={null}>
+        {authModalOpen && (
+          <AuthModal
+            isOpen={authModalOpen}
+            onClose={() => setAuthModalOpen(false)}
+            onSuccess={handleAuthSuccess}
+            initialMode={authModalMode}
+          />
+        )}
+        {qrModalOpen && (
+          <QRPassModal
+            isOpen={qrModalOpen}
+            onClose={() => setQrModalOpen(false)}
+            currentUser={currentUser}
+          />
+        )}
+      </Suspense>
     </div>
   )
 }

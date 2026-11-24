@@ -105,7 +105,7 @@ export default function PlansSection({ currentUser, onRequireAuth, onPaymentSucc
         setPlans(enhancedPlans);
       }
     } catch (err) {
-      console.warn('Using default plans fallback:', err);
+      // In offline / cold-start conditions, maintain curated default plans gracefully
     } finally {
       setLoading(false);
     }
@@ -265,7 +265,9 @@ export default function PlansSection({ currentUser, onRequireAuth, onPaymentSucc
             {razorpayNotice.type === 'config' ? '⚙' : '⚠'}
           </div>
           <div className="notice-content">
-            <h4>{razorpayNotice.title}</h4>
+            <h3 className="notice-title" style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '4px' }}>
+              {razorpayNotice.title}
+            </h3>
             <p>{razorpayNotice.message}</p>
           </div>
           <button

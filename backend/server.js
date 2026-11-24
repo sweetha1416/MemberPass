@@ -81,6 +81,19 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Standard Security Headers
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(self), microphone=(), geolocation=()"
+  );
+  next();
+});
+
 // API Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/plans", require("./routes/planRoutes"));
