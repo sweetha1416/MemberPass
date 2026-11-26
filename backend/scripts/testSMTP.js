@@ -27,3 +27,4 @@ const nodemailer = require("nodemailer");
   console.error("SMTP TEST FAILED:", err.message);
   process.exit(1);
 });
+
