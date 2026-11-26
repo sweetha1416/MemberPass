@@ -1,17 +1,17 @@
-# MemberPass – Premium AI-Powered Membership Management
+﻿# MemberPass â€“ Premium AI-Powered Membership Management
 
 **A smarter way to manage memberships.**
 
-## 🌐 Live Demo & Repository
+## ðŸŒ Live Demo & Repository
 
-- **Live Website:** https://member-pass-psi.vercel.app/
+- **Live Website:** https://member-pass.vercel.app/
 - **GitHub Repository:** https://github.com/sweetha1416/MemberPass
 - **Project Drive:** https://drive.google.com/file/d/11nW79ZUdcOa7IDWZXaMWA7gHmg-vu8A4/view?usp=sharing
 - **AI Assistant Demo:** https://drive.google.com/file/d/1fE0dK_WYZGUPuKz4V554H17JqjZujUlv/view?usp=sharing
 
 ---
 
-## 📌 About the Project
+## ðŸ“Œ About the Project
 
 **MemberPass** is a web-based membership management platform engineered for **Thendral Yoga Loft, Coimbatore** (developed as part of the Vizdale Full-Stack Developer Internship). 
 
@@ -21,7 +21,7 @@ MemberPass provides a seamless, dignified digital experience for both yoga pract
 
 ---
 
-## 🎯 Project Objectives
+## ðŸŽ¯ Project Objectives
 
 - **Simplify Membership Management:** Centralize member subscriptions, privilege tiers, and profile information.
 - **Provide a User-Friendly Digital Experience:** Responsive Mediterranean Burgundy editorial interface for mobile and desktop.
@@ -33,26 +33,26 @@ MemberPass provides a seamless, dignified digital experience for both yoga pract
 
 ---
 
-## ✨ Key Features
+## âœ¨ Key Features
 
-- **Membership Management** – Manage member accounts, membership tiers, validity dates, and account standing.
-- **Multiple Membership Tiers** – 
-  - *Basic Plan*: ₹1,500 / 30 Days (8 studio classes)
-  - *Standard Plan*: ₹3,000 / 30 Days (25 studio classes)
-  - *Premium Plan*: ₹7,500 / 90 Days (Unlimited studio sessions)
-- **Razorpay Payment Integration** – Secure test checkout, client-side signature verification, and server-side webhook fulfillment.
-- **QR-Based Check-In** – Instant front-desk validation via camera scanner or manual pass code entry.
-- **Class Usage Tracking & Limit Enforcement** – Real-time tracking of classes used/remaining with atomic enforcement preventing concurrency bypass.
-- **Self-Service Membership Pause** – Members can pause an active pass once per calendar year (1–15 days) with automatic expiry date extension.
-- **Automated Expiry & Background Jobs** – Scheduled routines managing daily pause resumption and email reminder dispatch.
-- **AI Member Assistant** – Dedicated AI Assistant page with contextual intent routing and dynamic query handling.
-- **AI Absentee Drafts** – Staff tool generating personalized re-engagement drafts for inactive practitioners (14, 30, 60, or 90 days).
-- **Member Dashboard** – Real-time access to digital QR pass, pass key, class utilization, transaction ledger, and personal attendance history.
-- **Staff / Admin Console** – Camera check-in terminal, manual code entry, membership validation, attendance audit log, and manual expiry trigger.
+- **Membership Management** â€“ Manage member accounts, membership tiers, validity dates, and account standing.
+- **Multiple Membership Tiers** â€“ 
+  - *Basic Plan*: â‚¹1,500 / 30 Days (8 studio classes)
+  - *Standard Plan*: â‚¹3,000 / 30 Days (25 studio classes)
+  - *Premium Plan*: â‚¹7,500 / 90 Days (Unlimited studio sessions)
+- **Razorpay Payment Integration** â€“ Secure test checkout, client-side signature verification, and server-side webhook fulfillment.
+- **QR-Based Check-In** â€“ Instant front-desk validation via camera scanner or manual pass code entry.
+- **Class Usage Tracking & Limit Enforcement** â€“ Real-time tracking of classes used/remaining with atomic enforcement preventing concurrency bypass.
+- **Self-Service Membership Pause** â€“ Members can pause an active pass once per calendar year (1â€“15 days) with automatic expiry date extension.
+- **Automated Expiry & Background Jobs** â€“ Scheduled routines managing daily pause resumption and email reminder dispatch.
+- **AI Member Assistant** â€“ Dedicated AI Assistant page with contextual intent routing and dynamic query handling.
+- **AI Absentee Drafts** â€“ Staff tool generating personalized re-engagement drafts for inactive practitioners (14, 30, 60, or 90 days).
+- **Member Dashboard** â€“ Real-time access to digital QR pass, pass key, class utilization, transaction ledger, and personal attendance history.
+- **Staff / Admin Console** â€“ Camera check-in terminal, manual code entry, membership validation, attendance audit log, and manual expiry trigger.
 
 ---
 
-## 🛠️ Technologies Used
+## ðŸ› ï¸ Technologies Used
 
 - **Frontend:** React 19, Vite, JavaScript (ES6+), Vanilla CSS (Custom Design System)
 - **Backend:** Node.js, Express.js
@@ -66,18 +66,18 @@ MemberPass provides a seamless, dignified digital experience for both yoga pract
 
 ---
 
-## 📚 Milestone Documentation (docs/)
+## ðŸ“š Milestone Documentation (docs/)
 
 Detailed engineering and audit documentation is available in the [`docs/`](docs/) directory:
 
-- [**docs/AI_NOTES.md**](docs/AI_NOTES.md) – Source-verified documentation of the PyTorch GRU AI architecture, FastAPI microservice, backend intent routing, and environment verification status.
-- [**docs/TEST_REPORT.md**](docs/TEST_REPORT.md) – Comprehensive test audit report distinguishing previously reported regression results (76/76 passed) from pending/unverified live runs.
-- [**docs/PROGRESS.md**](docs/PROGRESS.md) – Milestone-by-milestone implementation summary tracking M1 through M4.
-- [**docs/DEMO_SCRIPT.md**](docs/DEMO_SCRIPT.md) – Step-by-step evaluator demonstration script covering both practitioner and staff workflows.
+- [**docs/AI_NOTES.md**](docs/AI_NOTES.md) â€“ Source-verified documentation of the PyTorch GRU AI architecture, FastAPI microservice, backend intent routing, and environment verification status.
+- [**docs/TEST_REPORT.md**](docs/TEST_REPORT.md) â€“ Comprehensive test audit report distinguishing previously reported regression results (76/76 passed) from pending/unverified live runs.
+- [**docs/PROGRESS.md**](docs/PROGRESS.md) â€“ Milestone-by-milestone implementation summary tracking M1 through M4.
+- [**docs/DEMO_SCRIPT.md**](docs/DEMO_SCRIPT.md) â€“ Step-by-step evaluator demonstration script covering both practitioner and staff workflows.
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## ðŸš€ Getting Started (Local Development)
 
 ### 1. Clone the Repository
 
@@ -150,17 +150,18 @@ uvicorn server:app --host 127.0.0.1 --port 8000
 
 ---
 
-## 🔗 Project Links
+## ðŸ”— Project Links
 
-- **Live Website:** https://member-pass-psi.vercel.app/
+- **Live Website:** https://member-pass.vercel.app/
 - **GitHub Repository:** https://github.com/sweetha1416/MemberPass
 
 ---
 
-## 👨‍💻 Project Status
+## ðŸ‘¨â€ðŸ’» Project Status
 
 MemberPass has completed **M1** (Foundations), **M2** (Core Membership & QR Verification), **M3** (Security Hardening, Automation & AI Assistant), and **M4** (Documentation Verification & Quality Audit).
 
 ---
 
-**MemberPass – Smarter Membership. Better Experiences.**
+**MemberPass â€“ Smarter Membership. Better Experiences.**
+
