@@ -105,3 +105,59 @@ For examiners conducting manual end-to-end evaluation using a live desktop or mo
 - [ ] **Step 6:** Click the **✦ AI Assistant** link in the navbar; click *"Check my live membership status"* and observe the assistant reporting Arun's live membership details.
 - [ ] **Step 7:** Click **Sign Out** in the navbar and confirm return to the landing page with the sign-out confirmation toast.
 - [ ] **Step 8:** Re-open Sign In, select **"Staff Portal (m2.staff)"**, log in, and verify the dedicated Staff check-in console with camera scanner and manual pass code entry.
+
+---
+
+## 6. Production Live Manual Verification (26 Nov 2026)
+
+### 6.1 Verification Scope & Methodology
+The following test suite was manually verified in an active browser session against the live deployed production application at `https://member-pass.vercel.app/` using visual screenshots and interactive user testing.
+
+**Methodology & Safety Limitations:**
+- This was a live manual visual and interactive verification, not automated browser testing.
+- No real payment was performed.
+- No class credit was deducted.
+- No attendance record was intentionally modified.
+- No expiry-reminder trigger was executed.
+- No AI absentee drafts were generated.
+- Scanner activation and live QR verification were not performed.
+- **PASS** means observed and manually verified UI/flow only; it does not mean backend behavior for every feature was independently tested.
+
+---
+
+### 6.2 Manual Verification Results Matrix
+
+| # | Test Check / Flow | Observed Behavior & Evidence | Status |
+| :-: | :--- | :--- | :---: |
+| 1 | Logged-out homepage rendering | Landing page rendered completely with editorial typography, Mediterranean Burgundy branding, hero headline, value proposition, and trust badges. | **PASS** |
+| 2 | Sign-in modal UI | Modal rendered with Sign In and Create Account tabs, email and password input fields, Authenticate Entry button, demo profile pills, and close button visible. | **PASS** |
+| 3 | Active Member demo login | Clicked demo profile pill (`arun1@example.com` / `MemberPass@123`), authenticated successfully, and redirected to Member Dashboard. | **PASS** |
+| 4 | Member dashboard rendering | Personalized welcome banner, practitioner avatar initials, member ID, email, and 4-metric stat cards rendered cleanly. | **PASS** |
+| 5 | Member profile and membership information display | Basic plan details, active cryptographic pass key, and class utilization metrics displayed with correct visual hierarchy. | **PASS** |
+| 6 | Membership pause state display | Paused status, suspension message, pause/resume information, and expiry extension shown accurately. | **PASS** |
+| 7 | Member AI membership status query | Member asked AI Assistant for status; response consistently reported member name, Basic plan, paused status, 4/8 classes used, expiry date, and paused QR pass. | **PASS** |
+| 8 | AI follow-up explanation | Member asked for follow-up details regarding paused status; AI returned general QR-pass explanation rather than fully contextual paused-member explanation. | **PARTIAL** |
+| 9 | QR pass access restriction for paused membership | Modal displayed "Membership Not Active" and "Membership is paused"; no scanner or class deduction was performed. | **PASS** |
+| 10 | Member logout and logout confirmation | Clicked Sign Out; session cleared from localStorage, redirected to homepage, and displayed sign-out confirmation toast. | **PASS** |
+| 11 | Staff dashboard rendering after staff login | Logged in via Staff Portal demo pill (`m2.staff@example.com`); dedicated Staff Dashboard rendered with admin header and action cards. | **PASS** |
+| 12 | Staff scanner interface and manual pass-code entry | UI presence only: camera QR scanner container and manual pass-code input field verified present; no scanner activation or verification action performed. | **PASS** |
+| 13 | Staff expiry reminder interface | UI presence only: Expiry Reminders card, explanation, and "Run Expiry Check Now" button verified present; no expiry-trigger action performed. | **PASS** |
+| 14 | Staff AI absentee drafts interface | UI presence only: Absentee inactivity threshold selector (14/30/60/90 days) and "Generate Drafts" button verified present; no draft-generation action performed. | **PASS** |
+| 15 | Staff attendance history display | Attendance history card and audit list items displayed visible records with member names, email, plan pill, staff attribution, and timestamps (visible records only). | **PASS** |
+| 16 | Staff AI assistant page and authenticated staff context | Navigated to AI Assistant from staff dashboard; authenticated staff context and dedicated chat layout verified active. | **PASS** |
+| 17 | Staff AI QR verification inquiry | Inquired about QR pass verification; returned generic QR pass explanation; staff-specific contextual guidance was not demonstrated. | **PARTIAL** |
+| 18 | Staff logout and logged-out homepage | Clicked staff Sign Out; session state successfully terminated and returned to public logged-out homepage. | **PASS** |
+
+---
+
+### 6.3 Manual Verification Summary (18 Checks)
+
+| Outcome | Count | Percentage |
+| :--- | :---: | :---: |
+| **PASS** | **16** | **88.9%** |
+| **PARTIAL** | **2** | **11.1%** |
+| **FAIL** | **0** | **0.0%** |
+| **BLOCKED** | **0** | **0.0%** |
+| **TOTAL** | **18** | **100.0%** |
+
+- **Summary of Findings:** All core UI rendering, navigation, authentication, dashboard state displays, QR restrictions, staff admin console interfaces, and session termination flows passed manual visual verification on the live deployed website (`https://member-pass.vercel.app/`). Checks 8 and 17 were evaluated as **PARTIAL** because the AI Assistant provided general domain explanations rather than context-specific reasoning for paused memberships or staff operations.
