@@ -161,3 +161,25 @@ The following test suite was manually verified in an active browser session agai
 | **TOTAL** | **18** | **100.0%** |
 
 - **Summary of Findings:** All core UI rendering, navigation, authentication, dashboard state displays, QR restrictions, staff admin console interfaces, and session termination flows passed manual visual verification on the live deployed website (`https://member-pass.vercel.app/`). Checks 8 and 17 were evaluated as **PARTIAL** because the AI Assistant provided general domain explanations rather than context-specific reasoning for paused memberships or staff operations.
+
+## 7. Lighthouse Audit (27 Nov 2026)
+
+### Lighthouse Scores
+- Accessibility: 97/100
+- Best Practices: 100/100
+- SEO: 100/100
+- Performance: Not measured (Lighthouse trace recording error: NO_NAVSTART)
+
+### Performance Test Limitation
+The Lighthouse Performance audit was attempted multiple times on the deployed website. The performance metrics could not be recorded because Lighthouse returned a NO_NAVSTART trace recording error.
+
+First Contentful Paint (FCP), Largest Contentful Paint (LCP), Total Blocking Time (TBT), Cumulative Layout Shift (CLS), and Speed Index were not measured. These results are recorded as unavailable rather than interpreted as performance failures.
+
+The Accessibility, Best Practices, and SEO audits returned scores of 97, 100, and 100 respectively.
+
+### Audit Environment
+- Website: https://member-pass.vercel.app/
+- Tool: Google Chrome Lighthouse
+- Device mode: Mobile
+- Audit date: 27 November 2026
+
