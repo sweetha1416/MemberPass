@@ -1,167 +1,135 @@
-﻿# MemberPass â€“ Premium AI-Powered Membership Management
+﻿# MemberPass – Premium Membership Management
 
-**A smarter way to manage memberships.**
+MemberPass is a membership management platform designed to simplify membership tracking, attendance, membership plans and member support for yoga studios.
 
-## ðŸŒ Live Demo & Repository
+**Live link:** https://member-pass.vercel.app/
 
-- **Live Website:** https://member-pass.vercel.app/
-- **GitHub Repository:** https://github.com/sweetha1416/MemberPass
-- **Project Drive:** https://drive.google.com/file/d/11nW79ZUdcOa7IDWZXaMWA7gHmg-vu8A4/view?usp=sharing
-- **AI Assistant Demo:** https://drive.google.com/file/d/1fE0dK_WYZGUPuKz4V554H17JqjZujUlv/view?usp=sharing
+## Recordings
 
----
+- Demo video: Pending – recording will be added later.
+- AI assistant demonstration: https://drive.google.com/
 
-## ðŸ“Œ About the Project
+## Test logins
 
-**MemberPass** is a web-based membership management platform engineered for **Thendral Yoga Loft, Coimbatore** (developed as part of the Vizdale Full-Stack Developer Internship). 
+Demo accounts are available through the application's demo login interface.
 
-The platform simplifies and modernizes membership operations, integrating membership tier subscriptions, test-mode payment processing, attendance tracking, cryptographic QR-based studio check-in, self-service membership pause, automated expiry notifications, and intelligent AI assistance into a unified SaaS application.
+- **Member:** Active Member demo account
+- **Staff:** Staff demo account
+- **Admin:** Admin demo account (if available in the application)
 
-MemberPass provides a seamless, dignified digital experience for both yoga practitioners and studio front-desk administrators.
+Demo accounts use sample data only. Do not use real passwords or personal account credentials.
 
----
+## What it does
 
-## ðŸŽ¯ Project Objectives
+1. Allows members to log in and view their membership details, membership status and class usage.
+2. Provides membership plans and tracks membership information, expiry and pause status.
+3. Supports QR-based membership pass interfaces and staff attendance verification workflows.
+4. Provides staff dashboards for attendance history, member management, expiry reminders and absentee-related workflows.
+5. Includes an AI assistant to answer membership-related queries and help users understand their membership information.
 
-- **Simplify Membership Management:** Centralize member subscriptions, privilege tiers, and profile information.
-- **Provide a User-Friendly Digital Experience:** Responsive Mediterranean Burgundy editorial interface for mobile and desktop.
-- **Integrate AI-Powered Assistance:** Hybrid Q&A assistant supporting live status lookups and domain queries.
-- **Enable Secure Payments:** Razorpay checkout flow with signature verification and webhook processing.
-- **Track Attendance & Class Usage:** Optical QR check-in terminal with atomic class deduction and daily idempotency.
-- **Automate Expiry Management:** Scheduled background jobs for membership pause resumption and 3-day expiry alerts.
-- **Protect Member Privacy:** Confidential check-in records with strict authentication boundaries and zero cross-member exposure.
+## The AI feature
 
----
+- **What it does:** MemberPass includes an AI assistant that helps answer membership-related questions and provides membership information. The AI service uses a GRU-based model through a Python FastAPI service.
+- **Which free model it uses:** A custom GRU-based model implemented using PyTorch.
+- **What happens if the AI service is not available:** The backend includes a fallback response mechanism so that the AI assistant can still provide basic responses when the AI service is unavailable.
 
-## âœ¨ Key Features
+## My stack
 
-- **Membership Management** â€“ Manage member accounts, membership tiers, validity dates, and account standing.
-- **Multiple Membership Tiers** â€“ 
-  - *Basic Plan*: â‚¹1,500 / 30 Days (8 studio classes)
-  - *Standard Plan*: â‚¹3,000 / 30 Days (25 studio classes)
-  - *Premium Plan*: â‚¹7,500 / 90 Days (Unlimited studio sessions)
-- **Razorpay Payment Integration** â€“ Secure test checkout, client-side signature verification, and server-side webhook fulfillment.
-- **QR-Based Check-In** â€“ Instant front-desk validation via camera scanner or manual pass code entry.
-- **Class Usage Tracking & Limit Enforcement** â€“ Real-time tracking of classes used/remaining with atomic enforcement preventing concurrency bypass.
-- **Self-Service Membership Pause** â€“ Members can pause an active pass once per calendar year (1â€“15 days) with automatic expiry date extension.
-- **Automated Expiry & Background Jobs** â€“ Scheduled routines managing daily pause resumption and email reminder dispatch.
-- **AI Member Assistant** â€“ Dedicated AI Assistant page with contextual intent routing and dynamic query handling.
-- **AI Absentee Drafts** â€“ Staff tool generating personalized re-engagement drafts for inactive practitioners (14, 30, 60, or 90 days).
-- **Member Dashboard** â€“ Real-time access to digital QR pass, pass key, class utilization, transaction ledger, and personal attendance history.
-- **Staff / Admin Console** â€“ Camera check-in terminal, manual code entry, membership validation, attendance audit log, and manual expiry trigger.
+- **Frontend:** React and Vite – used to build the interactive user interface and dashboards.
+- **Backend:** Node.js and Express.js – used to manage API requests, membership operations and backend logic.
+- **Database:** MongoDB and Mongoose – used to store and manage membership and application data.
+- **AI service:** Python, FastAPI and PyTorch – used to implement and serve the GRU-based AI functionality.
+- **Payment integration:** Razorpay test mode – used for payment integration development and testing.
+- **Authentication:** Application authentication and role-based interfaces for member and staff workflows.
+- **Development tools:** Visual Studio Code, Git and GitHub.
+- **AI tools:** ChatGPT and Google Antigravity – used for development assistance, debugging, code exploration and UI/UX improvements.
 
----
+## Main design choices
 
-## ðŸ› ï¸ Technologies Used
+- React was chosen to create a component-based and responsive frontend.
+- Node.js and Express.js were used to create backend APIs and application logic.
+- MongoDB was selected to store flexible membership-related data.
+- FastAPI was used to serve the Python AI component separately from the main backend.
+- PyTorch was used to implement the GRU-based AI model.
+- The application separates member and staff experiences through role-oriented interfaces.
+- The project includes membership status handling, including active and paused membership states.
+- AI service fallback handling was implemented to improve availability when the separate AI service is unavailable.
+- Razorpay test mode was used during payment integration development.
 
-- **Frontend:** React 19, Vite, JavaScript (ES6+), Vanilla CSS (Custom Design System)
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB, Mongoose
-- **Authentication:** JWT (JSON Web Tokens) with role-based access control (`member`, `staff`, `admin`)
-- **Payment Gateway:** Razorpay API (Test Mode & Webhooks)
-- **AI Service:** PyTorch GRU-based sequence model (`memberpass-ai`), FastAPI, Python 3.13 (with Node.js rule/context fallback)
-- **Scheduling:** Node.js interval background jobs (`node-cron` compatible)
-- **Deployment:** Vercel (Frontend), Render (Backend)
-- **Version Control:** Git & GitHub
+## How to run it on your computer
 
----
-
-## ðŸ“š Milestone Documentation (docs/)
-
-Detailed engineering and audit documentation is available in the [`docs/`](docs/) directory:
-
-- [**docs/AI_NOTES.md**](docs/AI_NOTES.md) â€“ Source-verified documentation of the PyTorch GRU AI architecture, FastAPI microservice, backend intent routing, and environment verification status.
-- [**docs/TEST_REPORT.md**](docs/TEST_REPORT.md) â€“ Comprehensive test audit report distinguishing previously reported regression results (76/76 passed) from pending/unverified live runs.
-- [**docs/PROGRESS.md**](docs/PROGRESS.md) â€“ Milestone-by-milestone implementation summary tracking M1 through M4.
-- [**docs/DEMO_SCRIPT.md**](docs/DEMO_SCRIPT.md) â€“ Step-by-step evaluator demonstration script covering both practitioner and staff workflows.
-
----
-
-## ðŸš€ Getting Started (Local Development)
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/sweetha1416/MemberPass.git
-cd MemberPass
-```
-
-### 2. Frontend Setup
+### Frontend
 
 ```bash
 cd frontend
 npm install
-```
-
-Configure `frontend/.env` (optional, defaults to local or production fallback):
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-Start the frontend development server:
-```bash
 npm run dev
 ```
 
-### 3. Backend Setup
+### Backend
 
-In a new terminal window:
 ```bash
 cd backend
 npm install
+npm start
 ```
 
-Configure `backend/.env` with the verified environment variable names:
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/memberpass
-JWT_SECRET=your_jwt_secret_key_here
-JWT_EXPIRES_IN=7d
-RAZORPAY_KEY_ID=rzp_test_your_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_secret
-RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
-AI_SERVICE_URL=http://127.0.0.1:8000
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@example.com
-SMTP_PASS=your_email_app_password
-EMAIL_FROM="MemberPass <noreply@memberpass.com>"
-STAFF_EMAIL=staff@example.com
-STAFF_PASSWORD=your_staff_password
-```
+### AI service
 
-Start the backend server:
-```bash
-npm run dev
-```
-
-### 4. Optional: Python AI Microservice Setup (`memberpass-ai`)
-
-> **Note on AI Environment Status:** The Python AI service environment and its runtime execution have not been successfully verified in all local environments. If the Python microservice is not running, the Node.js backend automatically provides intelligent domain responses and context-aware fallbacks without interrupting user operations.
-
-To run the local PyTorch AI service:
 ```bash
 cd memberpass-ai
-python -m venv .venv
-# Activate virtual environment (Windows: .venv\Scripts\activate | Unix: source .venv/bin/activate)
-pip install torch fastapi uvicorn pydantic
-uvicorn server:app --host 127.0.0.1 --port 8000
+python -m venv .venvenv
 ```
 
----
+Windows PowerShell:
 
-## ðŸ”— Project Links
+```powershell
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m uvicorn server:app --host 127.0.0.1 --port 8000
+```
 
-- **Live Website:** https://member-pass.vercel.app/
-- **GitHub Repository:** https://github.com/sweetha1416/MemberPass
+### Settings
 
----
+Configure the required environment variables in the respective `.env` files.
 
-## ðŸ‘¨â€ðŸ’» Project Status
+- `VITE_API_URL`
+- `PORT`
+- `MONGODB_URI`
+- `JWT_SECRET`
+- `RAZORPAY_KEY_ID`
+- `RAZORPAY_KEY_SECRET`
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_USER`
+- `SMTP_PASS`
+- `AI_SERVICE_URL`
 
-MemberPass has completed **M1** (Foundations), **M2** (Core Membership & QR Verification), **M3** (Security Hardening, Automation & AI Assistant), and **M4** (Documentation Verification & Quality Audit).
+Never commit real secrets, API keys or passwords.
 
----
+## How to run the tests
 
-**MemberPass â€“ Smarter Membership. Better Experiences.**
+```bash
+node backend/scripts/testSMTP.js
+```
 
+Additional manual testing was performed on the deployed application. Testing includes member and staff interfaces, membership information, membership pause status, AI responses and QR-related UI workflows.
+
+## Made-up data
+
+The application uses sample and demonstration data created for development and testing purposes. The demonstration data is intended to be fictional and does not represent real customers or members.
+
+## What works
+
+- **Fully working:** Application frontend, member dashboard interfaces, staff dashboard interfaces, membership information display, membership pause-status display, AI service runtime, AI service fallback, SMTP connection testing and deployed application navigation.
+- **Partly done:** AI contextual responses for certain follow-up questions, live QR verification and some staff workflows that require additional backend or real-world verification.
+- **Skipped:** Full live production payment validation, real-world QR scanner hardware validation and destructive live database testing during the current verification process.
+
+## What I would do differently with more time
+
+- Improve AI response accuracy and contextual understanding.
+- Perform more comprehensive automated backend and frontend testing.
+- Improve accessibility and browser autofill support.
+- Complete end-to-end testing for QR verification and attendance workflows.
+- Improve the application's performance and optimize frontend assets.
+- Add more comprehensive monitoring and error handling for production services.
