@@ -1,8 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
 import './App.css'
-import './components/AIAssistantPage.css'
 import PlansSection from './components/PlansSection'
-import { getStoredUser, clearAuth, authApi } from './services/api'
+import { getStoredUser, authApi } from './services/api'
 
 // Lazy-loaded routes & modals to reduce initial bundle size & unused JavaScript
 const AuthModal = lazy(() => import('./components/AuthModal'))
@@ -76,10 +75,6 @@ export default function App() {
       return () => clearTimeout(timer)
     }
   }, [selectedPlanToast])
-
-  const handlePlanSelect = (planName) => {
-    setSelectedPlanToast(`You have selected the ${planName}. Our yoga centre wellness coordinator will connect with you shortly.`)
-  }
 
   const handleContactSubmit = (e) => {
     e.preventDefault()

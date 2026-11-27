@@ -543,6 +543,10 @@ export default function MemberDashboard({
                       src={passData.pass.qrCode}
                       alt="Digital Membership QR Code"
                       className="qr-image"
+                      width="160"
+                      height="160"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="qr-scan-badge">
                       <span className="scan-icon">⊡</span>

@@ -68,7 +68,15 @@ export default function QRPassModal({ isOpen, onClose, currentUser }) {
         ) : isActive && pass?.qrCode ? (
           <div className="modal-qr-body">
             <div className="qr-frame">
-              <img src={pass.qrCode} alt="Member QR Code" className="modal-qr-image" />
+              <img
+                src={pass.qrCode}
+                alt="Member QR Code"
+                className="modal-qr-image"
+                width="200"
+                height="200"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
 
             <div className="modal-pass-meta">
